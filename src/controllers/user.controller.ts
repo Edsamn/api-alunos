@@ -17,13 +17,13 @@ class UserController {
   public async create(req: Request, res: Response) {
     const {email, password} = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({success: true, msg: "Required fields."});
-    }
-
     try {
+      if (!email || !password) {
+        return res.status(400).json({success: true, msg: "Required fields."});
+      }
+
       const studentFind = await db.students.findUnique({
-        where: {email: email},
+        where: {email},
       });
 
       if (!studentFind) {
