@@ -18,11 +18,13 @@ model Students {
   name String @db.VarChar(100)
   email String @unique
   user Users?
+  type Type @default(M)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   registrations Registrations[]
+  avaliations Avaliations[]
   @@map("students")
 }
 
@@ -63,4 +65,26 @@ model Registrations {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("registrations")
+}
+
+model Avaliations {
+  id String @id @default(uuid()) @db.Uuid
+  module String @db.VarChar(100)
+  studentId String @db.Uuid @map("student_id")
+  student Students @relation(fields: [studentId], references: [id])
+  grade Int
+
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("avaliations")
+}
+
+enum Type {
+  M
+  T
+  F
+
+  @@map("type")
 }

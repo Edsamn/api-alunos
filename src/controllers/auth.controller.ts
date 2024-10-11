@@ -2,6 +2,7 @@ import {Request, Response} from "express";
 import db from "../database/prisma.connection";
 import bcrypt from "bcrypt";
 import {v4 as uuid} from "uuid";
+import * as jwt from "jsonwebtoken";
 
 class AuthController {
   public async create(req: Request, res: Response) {
@@ -21,7 +22,9 @@ class AuthController {
         return res.status(401).json({success: false, msg: "Email or password incorrect."});
       }
 
-      const token = uuid();
+      const token = jwt.sign({email, id: studentFind.id, type: studentFind.type}, process.env.JWT_SECRET || "", {
+        expiresIn: "1d",
+      });
 
       await db.users.update({
         where: {id: studentFind.user?.id},
